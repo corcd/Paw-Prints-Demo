@@ -4,9 +4,6 @@ import {MapService} from "./map.service";
 import {Observable} from 'rxjs/observable';
 
 import { AppConfig } from './../../app/app.config';
-import { POINTS } from './../../app/points';
-
-
 
 @Component({
   selector: 'page-home',
@@ -69,19 +66,20 @@ export class HomePage {
         sub.complete();
       }, error => {
         sub.error(error);
-        this.loader.dismiss();
+        this.loader_locate.dismiss();
         this.alertNoGps();
       });
     });
   }
+
 
   /**
    * 出错提示
    */
   private alertNoGps() {
     const alert = this.alertCtrl.create({
-      title: 'OFBH5',
-      subTitle: '定位服务不可用,请到设置里面开启!',
+      title: '错误',
+      subTitle: '系统定位服务不可用,请到设置里面开启!',
       enableBackdropDismiss: false,
       buttons: [{
         text: '好的',
@@ -92,13 +90,14 @@ export class HomePage {
     alert.present();
   }
 
-  /***
-   * 地图中心点变更
-   */
-  onCenterChanged() {
-    console.log("onCenterChanged");
+
+  displayCircle() {
     this.platform.ready().then(() => {
-      
+      this.mapService.showRegionalInfo().subscribe(() => {
+        console.log("draw circle");
+      }, error => {
+        console.log(error);
+      });
     });
   }
 
